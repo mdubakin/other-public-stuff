@@ -7,16 +7,14 @@ def printStrings():
         count += 1
         print(f"{count}. {i}")
 
-# def sensitivitySelection():
-#     choice = int(input('''
-# Выбирите вариант чувствительности к регистру:
-#     1. Чувствительный к регистру.
-#     2. Не чувствительный к регистру.
+def sensitivitySelection():
+    choice = int(input('''
+Выбирите вариант чувствительности к регистру:
+    1. Чувствительный к регистру.
+    2. Нечувствительный к регистру.
 
-# Ввод номера: '''))
-#     if choice == 1:
-
-
+Ввод номера: '''))
+    return choice
 
 def start():
     action = int(input('''
@@ -50,7 +48,8 @@ def start():
         numTargetString = int(input("\nВведите номер строки: "))
         targetString = strings[numTargetString - 1]
         targetSubstring = input("\nВведите подстроку для поиска: ")
-        return boyerMooreSearch(targetString, targetSubstring)
+        sensitivity = sensitivitySelection()
+        return boyerMooreSearch(targetString, targetSubstring, sensitivity)
 
         
 # Функция для завершения или продолжения работы программы.
@@ -67,27 +66,30 @@ def stop():
         exit(0)
 
 # Алгоритм Бойера-Мура.
-def boyerMooreSearch(string, target):
+def boyerMooreSearch(string, target, sensitivity=1):
+    # Случай, если выбрана нечувствительность к регистру.
+    if sensitivity == 2:
+        string = string.lower()
+        target = target.lower()
+
     # Этап 1: формирование таблицы смещений
-    
     uniqSymbols = set()           # уникальные символы в образе
     numberOfSymbols = len(target) # число символов в образе
     offsets = {}                  # словарь смещений
 
-    for i in range(numberOfSymbols-2, -1, -1): # итерации с предпоследнего символа
+    for i in range(numberOfSymbols - 2, -1, -1): # итерации с предпоследнего символа
         if target[i] not in uniqSymbols:       # если символ еще не добавлен в таблицу
             offsets[target[i]] = numberOfSymbols - i - 1
             uniqSymbols.add(target[i])
 
     if target[numberOfSymbols - 1] not in uniqSymbols: # отдельно формируем последний символ
-        offsets[target[numberOfSymbols-1]] = numberOfSymbols
+        offsets[target[numberOfSymbols - 1]] = numberOfSymbols
 
     offsets['*'] = numberOfSymbols                   # смещения для прочих символов
 
     print(f"\nСмещения: {offsets}")
 
     # Этап 2: поиск образа в строке
-
     lenString = len(string)
 
     if lenString >= numberOfSymbols:
@@ -98,8 +100,8 @@ def boyerMooreSearch(string, target):
             j = 0
             flBreak = False
             for j in range(numberOfSymbols - 1, -1, -1):
-                if string[testSymbol-k] != target[j]:
-                    if j == numberOfSymbols-1:
+                if string[testSymbol - k] != target[j]:
+                    if j == numberOfSymbols - 1:
                         offset = offsets[string[testSymbol]] if offsets.get(string[testSymbol], False) else offsets['*']  # смещение, если не равен последний символ образа
                     else:
                         offset = offsets[target[j]]   # смещение, если не равен не последний символ образа
