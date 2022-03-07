@@ -31,7 +31,8 @@ def start():
     
     elif action == 1:
         newString = input("Введите строку: ")
-        return strings.append(newString)
+        strings.append(newString)
+        return printStrings()
 
     elif action == 2:
         printStrings()

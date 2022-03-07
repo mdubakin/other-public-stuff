@@ -36,7 +36,7 @@ def start():
             print("\n!!! Такого числа нет, попробуйте другое. !!!")
 
     elif action == 3:
-        print("\nИндекс:", binary_search(array, number))
+        print(f"\nЧисло {number} имеет индекс:", binary_search(array, number))
 
 # Функция для завершения или продолжения работы программы.
 def stop():
